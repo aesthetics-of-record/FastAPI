@@ -48,7 +48,7 @@ async def create_post(post_data: Post):
 	data = loads(dumps(post.find()))
 	count = None
 	if(len(data) == 0):
-		count = 1
+		count = 0
 	else:
 		count = int(data[-1]["index"]) + 1
 
