@@ -28,6 +28,7 @@ async def home():
 async def read_post():
 	data = post.find()
 	data = loads(dumps(data))
+	# print(type(data))
 
 	return data
 
