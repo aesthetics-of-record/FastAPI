@@ -50,7 +50,6 @@ async def read_post():
 
 	return data
 
-
 class Post(BaseModel):
 	title: str
 	content: str
