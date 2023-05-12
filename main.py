@@ -8,6 +8,7 @@ from bson import ObjectId # 몽고디에서만 있는 이진 데이터 타입
 from fastapi import FastAPI
 import pymongo
 from bson.json_util import dumps, loads
+from fastapi.encoders import jsonable_encoder
 
 app = FastAPI()
 
