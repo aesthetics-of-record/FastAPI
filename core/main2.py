@@ -15,7 +15,8 @@ app = FastAPI()
 # origins에는 protocal, domain, port만 등록한다.
 origins = [
 	# "http://192.168.0.13:3000", # url을 등록해도 되고
-	"*"  # private 영역에서 사용한다면 *로 모든 접근을 허용할 수 있다.
+	"*",  # private 영역에서 사용한다면 *로 모든 접근을 허용할 수 있다.
+	"https://aesthetics-of-record.github.io",
 ]
 
 app.add_middleware(
@@ -66,6 +67,15 @@ async def read_some_post(skip: int, limit: int):
 	data = loads(dumps(document))
 
 	return data
+
+@app.get("/api/posts/classification/", description="글 skip, limit를 통한 글 일부 가져오기\n그리고 classification을 통한 중앙 동아리 직무 동아리 구분 가능")
+async def read_some_post(skip: int, limit: int, classification: int):
+	cursor = post.find({"classification": classification})
+	document = cursor.skip(skip).limit(limit)
+	data = loads(dumps(document))
+
+	return data
+
 
 # 검색 기능
 @app.get("/api/posts/search/", description="검색어 쿼리로 넘기기")
