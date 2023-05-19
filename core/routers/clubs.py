@@ -79,6 +79,27 @@ async def search_club(query: str):
 
 	return data
 
+@router.get("/api/clubs/search/classification/", description="검색어 및 분류 쿼리로 넘기기")
+async def search_club(query: str, classification: int):
+	condition = [
+  {
+    '$search': {
+      'index': "clubSearch",
+      'text': {
+        'query': query,
+        'path': ['title', 'content', 'tag1', 'tag2', 'tag3']
+      }
+    }
+  },
+	{'$match': {'classification': classification}},
+		{ '$addFields': { 'score' : { '$meta': 'searchScore'}}}
+]
+
+	cursor = club.aggregate(condition)
+	data = loads(dumps(cursor))
+
+	return data
+
 class Club(BaseModel):
 	title: str
 	content: str
