@@ -2,8 +2,9 @@ from fastapi import FastAPI
 import pymongo
 import certifi
 from bson.json_util import dumps, loads
-import pydantic
 from bson import ObjectId
+import pydantic
+
 from typing import Optional
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
