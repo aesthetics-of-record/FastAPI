@@ -1,16 +1,10 @@
-from enum import Enum
 import pymongo
 import certifi
 from bson.json_util import dumps, loads
 import pydantic
 from bson import ObjectId
-from typing import Optional
 from pydantic import BaseModel
 from fastapi import APIRouter
-
-router = APIRouter(
-	tags=["clubs"]
-)
 
 ################################################################
 pydantic.json.ENCODERS_BY_TYPE[ObjectId] = str
@@ -25,6 +19,9 @@ db = client['core_data']
 club = db['club']
 ################################################################
 
+router = APIRouter(
+	tags=["clubs"]
+)
 
 @router.get("/api/clubs", description="동아리 전체 가져오기")
 async def read_all_club():
