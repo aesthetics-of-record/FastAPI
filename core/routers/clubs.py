@@ -30,6 +30,13 @@ async def read_all_club():
 
 	return data
 
+@router.get("/api/clubs/classification/", description="동아리 분류별 전체 가져오기")
+async def read_all_club(classification: int):
+	cursor = club.find({"classification": classification})
+	data = loads(dumps(cursor))
+
+	return data
+
 
 @router.get("/api/club/{objid}", description="오브젝트아이디에 맞는 동아리 1개만 가져오기")
 async def read_one_club(objid: str):
@@ -38,7 +45,7 @@ async def read_one_club(objid: str):
 
 	return data
 
-@router.get("/api/clubs/", description="동아리 skip, limit를 통한 동아리 일부 가져오기\nex) 3번째부터 4개 가져오려면, -> skip=2, limit=4")
+@router.get("/api/clubs/some/", description="동아리 skip, limit를 통한 동아리 일부 가져오기\nex) 3번째부터 4개 가져오려면, -> skip=2, limit=4")
 async def read_some_club(skip: int, limit: int):
 	cursor = club.find()
 	document = cursor.skip(skip).limit(limit)
@@ -46,7 +53,7 @@ async def read_some_club(skip: int, limit: int):
 
 	return data
 
-@router.get("/api/clubs/classification/", description="동아리 skip, limit를 통한 글 일부 가져오기\n그리고 classification을 통한 중앙 동아리 직무 동아리 구분 가능")
+@router.get("/api/clubs/some/classification/", description="동아리 skip, limit를 통한 글 일부 가져오기\n그리고 classification을 통한 중앙 동아리 직무 동아리 구분 가능")
 async def read_some_club(skip: int, limit: int, classification: int):
 	cursor = club.find({"classification": classification})
 	document = cursor.skip(skip).limit(limit)
