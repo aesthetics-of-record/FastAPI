@@ -6,4 +6,5 @@ class Notice(BaseModel):
 	content: str
 	author: str
 	user_id: str
+	club_name: str
 	classification: int
