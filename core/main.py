@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 # 라우터
-from routers import clubs, notices, promotions
+from routers import clubs, notices, promotions, users
 
 app = FastAPI()
 
@@ -29,5 +29,6 @@ async def home():
 app.include_router(clubs.router)
 app.include_router(notices.router)
 app.include_router(promotions.router)
+app.include_router(users.router)
 
 

@@ -17,4 +17,5 @@ db = client['core_data']
 collection_club = db['club']
 collection_promotion = db['promotion']
 collection_notice = db['notice']
+collection_user = db['user']
 ################################################################
