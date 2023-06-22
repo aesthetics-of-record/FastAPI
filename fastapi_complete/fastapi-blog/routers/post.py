@@ -24,6 +24,7 @@ def posts(db: Session = Depends(get_db)):
 def delete(id: int, db: Session = Depends(get_db)):
   return db_post.delete(id, db)
 
+# 나중에 꼭 직접 따로 만들어서 따라쳐보자.
 @router.post('/image')
 def upload_image(image: UploadFile = File(...)):
   letter = string.ascii_letters
