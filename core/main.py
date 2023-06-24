@@ -30,5 +30,3 @@ app.include_router(clubs.router)
 app.include_router(notices.router)
 app.include_router(promotions.router)
 app.include_router(users.router)
-
-
