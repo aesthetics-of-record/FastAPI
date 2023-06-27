@@ -56,9 +56,9 @@ def login_for_acess_token(form_data: OAuth2PasswordRequestForm = Depends()):
     }
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
+oauth2_schema = OAuth2PasswordBearer(tokenUrl="/api/login")
 # 토큰 검증 함수
-def verify_token(token: str):
+def verify_token(token: str = Depends(oauth2_schema)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         exp = payload.get("exp")
@@ -70,7 +70,7 @@ def verify_token(token: str):
 
 # 보호된 엔드포인트
 @router.get("/protected")
-async def protected_route(token: str = Depends(oauth2_scheme)):
+async def protected_route(token: str = Depends(oauth2_schema)):
 	payload = verify_token(token)
 	# 토큰이 유효하다면, 여기에서 필요한 처리를 수행합니다.
 	print('토큰 유효한듯?')
