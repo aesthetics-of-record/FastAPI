@@ -11,7 +11,7 @@ router = APIRouter(
 	tags=["users"]
 )
 
-ACCESS_TOKEN_EXPIRE_MINUTES = 1
+ACCESS_TOKEN_EXPIRE_MINUTES = 15
 SECRET_KEY = "secretkey825"
 ALGORITHM = "HS256"
 
@@ -45,33 +45,45 @@ def login_for_acess_token(form_data: OAuth2PasswordRequestForm = Depends()):
 	# access token 만들기
 	data = {
 		"sub": user["username"],
-		"exp": datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+		"exp": datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
 	}
 	access_token = jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
 
 	return {
         "access_token": access_token,
         "token_type": "bearer",
-        "username": user["username"]
+        "username": user["username"],
+		"clubs": user["clubs"]
     }
 
 
 oauth2_schema = OAuth2PasswordBearer(tokenUrl="/api/login")
 # 토큰 검증 함수
 def verify_token(token: str = Depends(oauth2_schema)):
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        exp = payload.get("exp")
-        if exp is None or datetime.utcnow() > datetime.fromtimestamp(exp):
-            raise HTTPException(status_code=401, detail="토큰이 이미 만기되었다.")
-        return payload
-    except JWTError:
-        raise HTTPException(status_code=401, detail="유효하지 않은 토큰이다.")
+	try:
+		payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+		sub = payload.get("sub")
+
+		if sub is None:
+			raise HTTPException(status_code=401, detail="로그인 되어있지 않다.")
+
+		if sub:
+			user = users_serializer(collection_user.find({"username": sub}))
+			if user is None:
+				raise HTTPException(status_code=401, detail="유효하지 않은 토큰이다.1")
+
+		exp = payload.get("exp")
+		if exp is None or datetime.utcnow() > datetime.fromtimestamp(exp):
+			raise HTTPException(status_code=401, detail="토큰이 이미 만기되었다.")
+
+		return { "payload": payload, "user": user }
+	except JWTError:
+		raise HTTPException(status_code=401, detail="유효하지 않은 토큰이다.2")
 
 # 보호된 엔드포인트
 @router.get("/protected")
 async def protected_route(token: str = Depends(oauth2_schema)):
-	payload = verify_token(token)
+	payload = verify_token(token).get("payload")
 	# 토큰이 유효하다면, 여기에서 필요한 처리를 수행합니다.
 	print('토큰 유효한듯?')
 	return token
