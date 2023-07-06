@@ -2,8 +2,21 @@ from fastapi import FastAPI, Cookie, status, Header
 from enum import Enum
 from typing import Annotated, Union
 from fastapi.responses import Response, HTMLResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+
+"""
+CORS설정 (@ 붙이는 거 아님)
+"""
+app.add_middleware(CORSMiddleware,
+					allow_origins=["http://localhost:3000"],
+					allow_credentials=True,
+					allow_headers=["*"],
+					allow_methods=["*"])
+
+
 
 """
 Enum
@@ -31,7 +44,7 @@ Response Cookie ( Response - 직접 응답 객체를 조정가능함. 즉 respon
 """
 @app.get("/api/response/cookie")
 def response(response: Response):
-	response.set_cookie(key="cookie_id", value="hello~ test cookie")
+	response.set_cookie(key="cookie_id", value="hello~ test cookie", httponly=True)
 	return {"massage": "get cookie"}
 
 """
